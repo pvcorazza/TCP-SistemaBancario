@@ -36,7 +36,7 @@ public abstract class Bank {
 		bank.showUI();
 	}
 	
-	//teste
+	// teste2
 
 	protected final List<BankInterface> bankInterfaces;
 
