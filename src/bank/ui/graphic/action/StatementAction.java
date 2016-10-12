@@ -37,6 +37,7 @@ import bank.business.BusinessException;
 import bank.business.domain.Branch;
 import bank.business.domain.CurrentAccountId;
 import bank.business.domain.Deposit;
+import bank.business.domain.Deposit.DepositStatus;
 import bank.business.domain.Transaction;
 import bank.business.domain.Transfer;
 import bank.business.domain.Withdrawal;
@@ -88,7 +89,7 @@ public class StatementAction extends AccountAbstractAction {
 
 		@Override
 		public int getColumnCount() {
-			return 5;
+			return 6;
 		}
 
 		@Override
@@ -109,6 +110,9 @@ public class StatementAction extends AccountAbstractAction {
 				break;
 			case 4:
 				key = "amount";
+				break;
+			case 5:
+				key ="status";
 				break;
 			default:
 				assert false;
@@ -170,6 +174,29 @@ public class StatementAction extends AccountAbstractAction {
 				} else {
 					assert false;
 				}
+				break;
+			case 5:
+				
+				if (t instanceof Deposit) {
+					
+					DepositStatus status = ((Deposit) t).getStatus();
+					
+					switch (status) {
+					case PENDING:
+						val = "Crédito não autorizado";
+						break;
+					case CONFIRMED:
+						val = "Confirmado";
+						break;
+					case REJECTED:
+						val = "Crédito não autorizado";
+						break;
+					default:
+						break;
+					}
+					
+				} 
+				
 				break;
 
 			default:

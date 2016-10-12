@@ -7,18 +7,19 @@ import java.util.Date;
  * 
  */
 public abstract class Transaction {
-
+	
 	private CurrentAccount account;
 	private double amount;
 	private Date date;
 	private OperationLocation location;
-
+	
 	protected Transaction(OperationLocation location, CurrentAccount account,
 			double amount) {
 		this.location = location;
 		this.date = new Date(System.currentTimeMillis());
 		this.account = account;
 		this.amount = amount;
+		
 	}
 
 	/**

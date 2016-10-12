@@ -80,6 +80,7 @@ public class StatementCommand extends Command {
 		sb.append(getTextManager().getText("location")).append("\t");
 		sb.append(getTextManager().getText("operation.type")).append("\t");
 		sb.append(getTextManager().getText("details")).append("\t");
+		//sb.append(getTextManager().getText("status")).append("\t");
 		sb.append(getTextManager().getText("amount")).append("\n");
 		sb.append("---------------------------------------------------------------------------------\n");
 		for (Transaction transaction : transactions) {
