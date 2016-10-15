@@ -14,6 +14,7 @@ import java.util.Random;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bank.business.BusinessException;
 import bank.business.domain.ATM;
 import bank.business.domain.Branch;
 import bank.business.domain.Client;
@@ -53,6 +54,8 @@ public class Database {
 		this.currentAccounts = new HashMap<>();
 		this.pendingDeposits = new ArrayList<>();
 		this.usedEnvelopes = new ArrayList<>();
+		
+		
 		
 			
 		if (initData) {
@@ -210,5 +213,19 @@ public class Database {
 			}
 		}
 		return null;
+	}
+	
+	public void confirmDeposit(Deposit deposit){
+		pendingDeposits.get(pendingDeposits.indexOf(deposit)).setStatusConfirmed();
+	}
+	
+	public void rejectDeposit(Deposit deposit){
+		pendingDeposits.get(pendingDeposits.indexOf(deposit)).setStatusRejected();
+	}
+	
+	public void deletePendingDeposit(Deposit deposit) throws BusinessException{
+		if(pendingDeposits.remove(deposit) == false){
+			throw new BusinessException("exception.deposit.allreadyConfirmed"); 
+		}
 	}
 }

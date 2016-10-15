@@ -82,17 +82,9 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 		return database.getAllPendingDeposits();
 	}
 
-	@Override
-	public boolean isUsedEnvelope(Long envelope) {
-		return database.isUsedEnvelope(envelope);
-		
-	}
 	
-	@Override
-	public Deposit getDeposit(Long envelope) {
-		
-		return database.getDeposit(envelope);
-	}
+	
+	
 	
 	//public ArrayList<Deposit> get
 

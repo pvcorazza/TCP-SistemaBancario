@@ -40,5 +40,12 @@ public interface AccountOperationService {
 
 	public Withdrawal withdrawal(long operationLocation, long branch,
 			long accountNumber, double amount) throws BusinessException;
+	
+	public Deposit getDeposit(Long envelope);
+	public boolean isUsedEnvelope(Long envelope);
+	public void confirmDeposit(Deposit deposit);
+	public void updateDepositStatus(Deposit deposit) throws BusinessException;
+	public void deletePendingDeposit(Deposit deposit);
+	public void rejectDeposit(Deposit deposit);
 
 }

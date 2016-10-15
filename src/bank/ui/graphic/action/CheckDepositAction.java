@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import bank.business.AccountManagementService;
+import bank.business.AccountOperationService;
 import bank.business.domain.Deposit;
 import bank.ui.TextManager;
 import bank.ui.graphic.BankGraphicInterface;
@@ -30,7 +31,7 @@ public class CheckDepositAction extends BankAction {
 	
 	private static final long serialVersionUID = 3464305499773865806L;
 	
-	private AccountManagementService accountManagementService;
+	private AccountOperationService accountOperationService;
 	
 	private JFormattedTextField textFieldEnvelope;
 	private JTextField textFieldAccount;
@@ -38,15 +39,18 @@ public class CheckDepositAction extends BankAction {
 	private JTextField textFieldAmount;
 	private Long envelope;
 	private JPanel panel;
+	Deposit deposit;
 
 
 	public CheckDepositAction(BankGraphicInterface bankInterface, 
 			TextManager textManager,
-			AccountManagementService accountManagementService) {
+			AccountOperationService accountOperationService) {
 		
 		super(bankInterface, textManager);
 		
-		this.accountManagementService = accountManagementService;
+		deposit = null;
+		
+		this.accountOperationService = accountOperationService;
 		super.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
 		super.putValue(Action.NAME,
@@ -65,6 +69,37 @@ public class CheckDepositAction extends BankAction {
 		
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setBounds(73, 262, 89, 25);
+		btnConfirmar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				if(deposit == null){
+					//exception
+					System.out.println("nao tem deposito\n");
+				}
+				else{
+					System.out.println("Temos deposito\n");
+					
+					deposit.setStatusConfirmed();
+					accountOperationService.confirmDeposit(deposit);
+						
+					try {
+						accountOperationService.updateDepositStatus(deposit);
+						accountOperationService.deletePendingDeposit(deposit);
+						textFieldAccount.setText("");
+						textFieldAmount.setText("");
+						textFieldBranch.setText("");
+						textFieldEnvelope.setText("");
+						deposit = null;
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					
+					//accountOperationService.deposit(operationLocation, branch, accountNumber, envelope, amount)
+				}
+				
+			}
+		});
 		frame.add(btnConfirmar);
 		
 		JLabel lblNewLabel = new JLabel("Verificar Dep\u00F3sitos");
@@ -73,6 +108,30 @@ public class CheckDepositAction extends BankAction {
 		
 		JButton btnRejeitar = new JButton("Rejeitar");
 		btnRejeitar.setBounds(204, 262, 97, 25);
+		btnRejeitar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				if(deposit == null){
+					//exception
+					System.out.println("nao tem deposito\n");
+				}
+				else{
+					System.out.println("Temos deposito\n");
+					
+					accountOperationService.rejectDeposit(deposit);
+					accountOperationService.deletePendingDeposit(deposit);
+					
+					textFieldAccount.setText("");
+					textFieldAmount.setText("");
+					textFieldBranch.setText("");
+					textFieldEnvelope.setText("");
+					deposit = null;
+
+				}
+				
+			}
+		});
 		frame.add(btnRejeitar);
 		
 		textFieldEnvelope = new JFormattedTextField(
@@ -92,8 +151,8 @@ public class CheckDepositAction extends BankAction {
 			public void actionPerformed(ActionEvent arg0) {
 				envelope = (long) ((Number) textFieldEnvelope.getValue()).intValue();
 				
-				if(accountManagementService.isUsedEnvelope(envelope)){
-					Deposit deposit = accountManagementService.getDeposit(envelope);
+				if(accountOperationService.isUsedEnvelope(envelope)){
+					deposit = accountOperationService.getDeposit(envelope);
 					if(deposit != null){
 						System.out.println("Quantia = "+deposit.getAmount()+"\n");
 						textFieldAccount.setText(""+deposit.getAccount().getId().getNumber());

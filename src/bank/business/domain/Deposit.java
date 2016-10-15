@@ -47,4 +47,7 @@ public class Deposit extends Transaction {
 	public void setStatusConfirmed(){
 		this.status = DepositStatus.CONFIRMED;
 	}
+	public void setStatusRejected(){
+		this.status = DepositStatus.REJECTED;
+	}
 }

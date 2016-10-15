@@ -28,7 +28,6 @@ public interface AccountManagementService {
 	
 	public ArrayList<Deposit> getAllPendingDeposits();
 	
-	public boolean isUsedEnvelope(Long envelope);
-	public Deposit getDeposit(Long envelope);
+
 
 }

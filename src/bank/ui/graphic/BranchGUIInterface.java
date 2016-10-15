@@ -58,7 +58,7 @@ public class BranchGUIInterface extends BankGraphicInterface {
 		addPanelAction(new TransferAction(this, textManager,
 				accountOperationService));
 		addPanelAction(new CheckDepositAction(this, textManager,
-				accountManagementService));
+				accountOperationService));
 		
 		pendingDepositsAction = new PendingDepositsAction(this, textManager,accountManagementService);
 	}

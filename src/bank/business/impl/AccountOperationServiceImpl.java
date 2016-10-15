@@ -46,6 +46,8 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 			throw new BusinessException("exception.envelope.allreadyUsed");
 		}
 		else{
+			
+			
 			CurrentAccount currentAccount = readCurrentAccount(branch,
 					accountNumber);
 			Deposit deposit = currentAccount.deposit(
@@ -57,6 +59,16 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 		}
 		
 	}
+	
+	@Override
+	public void updateDepositStatus(Deposit deposit) throws BusinessException{
+		CurrentAccount currentAccount = readCurrentAccount(deposit.getAccount().getId().getBranch().getNumber(),
+				deposit.getAccount().getId().getNumber());
+		
+		currentAccount.confirmDeposit(deposit);
+		currentAccount.sumAmount(deposit.getAmount());
+		
+	}
 
 	@Override
 	public double getBalance(long branch, long accountNumber)
@@ -64,6 +76,7 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 		return readCurrentAccount(branch, accountNumber).getBalance();
 	}
 
+	
 	private OperationLocation getOperationLocation(long operationLocationNumber)
 			throws BusinessException {
 		OperationLocation operationLocation = database
@@ -177,4 +190,39 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 		return withdrawal;
 	}
 
+	@Override
+	public Deposit getDeposit(Long envelope) {
+		
+		return database.getDeposit(envelope);
+	}
+	
+	@Override
+	public boolean isUsedEnvelope(Long envelope) {
+		return database.isUsedEnvelope(envelope);
+		
+	}
+
+	@Override
+	public void confirmDeposit(Deposit deposit) {
+		
+		database.confirmDeposit(deposit);
+		
+	}
+	
+	@Override
+	public void rejectDeposit(Deposit deposit) {
+		
+		database.rejectDeposit(deposit);
+	}
+
+	@Override
+	public void deletePendingDeposit(Deposit deposit) {
+		try {
+			database.deletePendingDeposit(deposit);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+	}
 }
