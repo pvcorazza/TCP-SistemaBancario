@@ -57,6 +57,7 @@ public class CurrentAccount implements Credentials {
 		this.deposits.add(deposit);
 		
 		
+		
 		switch (deposit.getStatus()) {
 			
 			case CONFIRMED:

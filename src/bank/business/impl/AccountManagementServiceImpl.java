@@ -70,10 +70,19 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 		return employee;
 	}
 	
-	public Map<CurrentAccountId,ArrayList<Deposit>> getAllPendingDeposits(){
-
-		return database.getAllPendingDeposits();
+	@Override
+	public boolean hasPendingDeposits(){
+		return database.hasPendingDeposits();
 		
 	}
+
+	@Override
+	public ArrayList<Deposit> getAllPendingDeposits() {
+		
+		return database.getAllPendingDeposits();
+	}
+	
+	
+	//public ArrayList<Deposit> get
 
 }

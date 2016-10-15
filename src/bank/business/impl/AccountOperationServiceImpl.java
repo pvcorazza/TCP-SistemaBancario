@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.sql.rowset.spi.TransactionalWriter;
+
 import bank.business.AccountOperationService;
 import bank.business.BusinessException;
 import bank.business.domain.Branch;
@@ -38,14 +40,22 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 	public Deposit deposit(long operationLocation, long branch,
 			long accountNumber, long envelope, double amount)
 			throws BusinessException {
-		CurrentAccount currentAccount = readCurrentAccount(branch,
-				accountNumber);
-		Deposit deposit = currentAccount.deposit(
-				getOperationLocation(operationLocation), envelope, amount);
 		
-		database.insertPendingDeposit(currentAccount.getId(), deposit);
 		
-		return deposit;
+		if(database.isUsedEnvelope(envelope)){
+			throw new BusinessException("exception.envelope.allreadyUsed");
+		}
+		else{
+			CurrentAccount currentAccount = readCurrentAccount(branch,
+					accountNumber);
+			Deposit deposit = currentAccount.deposit(
+					getOperationLocation(operationLocation), envelope, amount);
+			
+			database.insertPendingDeposit(deposit);
+			database.addUsedEnvelope(envelope);
+			return deposit;
+		}
+		
 	}
 
 	@Override

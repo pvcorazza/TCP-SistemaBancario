@@ -52,7 +52,7 @@ public class PendingDepositsAction extends BankAction {
 	private static final long serialVersionUID = 5568655004864764509L;
 	private final AccountManagementService accountManagementService;
 	private JDialog dialog;
-	private JTable transactions;
+	private JTable deposits_table;
 	private JPanel cards;
 
 	public PendingDepositsAction(BankGraphicInterface bankInterface, 
@@ -128,6 +128,60 @@ public class PendingDepositsAction extends BankAction {
 
 	@Override
 	public void execute() throws Exception {
+		
+		if(accountManagementService.hasPendingDeposits()){
+			
+			
+			
+			JFrame frame = new JFrame ();
+	        frame.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
+
+	        JPanel panel = new JPanel ();
+	        panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (),
+	                                                            "DEPÓSITOS PENDENTES",
+	                                                            TitledBorder.CENTER,
+	                                                            TitledBorder.TOP));
+
+			JPanel transactionsPanel = new JPanel();
+			
+			transactionsPanel
+					.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			deposits_table = new JTable();
+			JScrollPane scrollPane = new JScrollPane(deposits_table,
+					JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+					JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+			transactionsPanel.add(scrollPane);
+
+			JPanel mainPanel = new JPanel(new BorderLayout());
+			mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			//mainPanel.add(cardsPanel, BorderLayout.CENTER);
+			//mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
+
+			JPanel pane = new JPanel(new BorderLayout());
+			pane.add(mainPanel, BorderLayout.NORTH);
+			pane.add(transactionsPanel, BorderLayout.CENTER);
+			
+			
+			
+	        
+	        //JTable table = new JTable (3, 3);
+
+	        panel.add (transactionsPanel);
+
+	        frame.add (panel);
+
+	        frame.setLocationRelativeTo (null);
+	        frame.pack ();
+	        frame.setVisible (true);
+	        
+	        
+	        List<Deposit> deposits = accountManagementService.getAllPendingDeposits();
+			this.deposits_table.setModel(new TransactionTableModel(deposits));
+//			
+		}
+		
+		
+		
 //		JPanel transactionsPanel = new JPanel();
 //		
 //		
@@ -155,44 +209,7 @@ public class PendingDepositsAction extends BankAction {
 //		this.dialog.setVisible(true);
 		
 		
-		JFrame frame = new JFrame ();
-        frame.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
-
-        JPanel panel = new JPanel ();
-        panel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (),
-                                                            "DEPÓSITOS PENDENTES",
-                                                            TitledBorder.CENTER,
-                                                            TitledBorder.TOP));
-
-		JPanel transactionsPanel = new JPanel();
 		
-		transactionsPanel
-				.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		transactions = new JTable();
-		JScrollPane scrollPane = new JScrollPane(transactions,
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		transactionsPanel.add(scrollPane);
-
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-		JPanel pane = new JPanel(new BorderLayout());
-		pane.add(mainPanel, BorderLayout.NORTH);
-		pane.add(transactionsPanel, BorderLayout.CENTER);
-		
-		
-		
-        
-        //JTable table = new JTable (3, 3);
-
-        panel.add (transactionsPanel);
-
-        frame.add (panel);
-
-        frame.setLocationRelativeTo (null);
-        frame.pack ();
-        frame.setVisible (true);
         
        
 		

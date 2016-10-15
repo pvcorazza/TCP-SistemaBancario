@@ -35,8 +35,10 @@ public class Database {
 	private final Log log;
 	private final Map<Long, OperationLocation> operationLocations;
 	
-	// save all the indexes of pending deposits according the CurrentAccountId
-	private final Map<CurrentAccountId,ArrayList<Deposit>> pendingDeposits;
+	// save all the pending deposits according
+	private final ArrayList<Deposit> pendingDeposits;
+	
+	private final ArrayList<Long> usedEnvelopes;
 	
 	
 
@@ -49,9 +51,10 @@ public class Database {
 		this.operationLocations = new HashMap<>();
 		this.employees = new HashMap<>();
 		this.currentAccounts = new HashMap<>();
-		this.pendingDeposits = new HashMap<>();
+		this.pendingDeposits = new ArrayList<>();
+		this.usedEnvelopes = new ArrayList<>();
 		
-		
+			
 		if (initData) {
 			initData();
 		}
@@ -124,6 +127,9 @@ public class Database {
 				changeDate(
 						ca1.deposit(b1, r.nextInt(10000), r.nextDouble() * 150),
 						r, cal);
+				Deposit dp1 = new Deposit(b1, ca1, r.nextInt(10000), r.nextDouble() * 150);
+				insertPendingDeposit(dp1);
+				
 				changeDate(ca1.withdrawal(atm1, r.nextDouble() * 100), r, cal);
 				changeDate(ca1.transfer(atm2, ca2, r.nextDouble() * 100), r,
 						cal);
@@ -164,17 +170,27 @@ public class Database {
 	}
 	
 
-	public void insertPendingDeposit(CurrentAccountId currentAccountId,Deposit deposit){
-		ArrayList<Deposit> array = pendingDeposits.get(currentAccountId);
-		if(array == null){
-			array = new ArrayList<>();
-			array.add(deposit);
-		}
-		this.pendingDeposits.put(currentAccountId,array);	
+	public void insertPendingDeposit(Deposit deposit){
+
+		this.pendingDeposits.add(deposit);
+	}
+	
+	
+	public ArrayList<Deposit> getAllPendingDeposits(){
+		return pendingDeposits;
 	}
 	
 	public boolean hasPendingDeposits(){
-		if(pendingDeposits.size()>0){
+		if(pendingDeposits.size() == 0){
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	public boolean isUsedEnvelope(Long envelope){
+		if(usedEnvelopes.contains(envelope)){
 			return true;
 		}
 		else{
@@ -182,7 +198,7 @@ public class Database {
 		}
 	}
 	
-	public Map<CurrentAccountId,ArrayList<Deposit>> getAllPendingDeposits(){
-		return pendingDeposits;
+	public void addUsedEnvelope(Long envelope){
+		this.usedEnvelopes.add(envelope);
 	}
 }

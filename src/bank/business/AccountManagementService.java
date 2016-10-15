@@ -3,9 +3,11 @@
  */
 package bank.business;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import bank.business.domain.CurrentAccount;
+import bank.business.domain.Deposit;
 import bank.business.domain.Employee;
 
 /**
@@ -20,5 +22,9 @@ public interface AccountManagementService {
 
 	public Employee login(String username, String password)
 			throws BusinessException;
+	
+	public boolean hasPendingDeposits();
+	
+	public ArrayList<Deposit> getAllPendingDeposits();
 
 }
