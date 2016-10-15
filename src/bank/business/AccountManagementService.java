@@ -5,6 +5,7 @@ package bank.business;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import bank.business.domain.CurrentAccount;
 import bank.business.domain.Deposit;
@@ -26,5 +27,8 @@ public interface AccountManagementService {
 	public boolean hasPendingDeposits();
 	
 	public ArrayList<Deposit> getAllPendingDeposits();
+	
+	public boolean isUsedEnvelope(Long envelope);
+	public Deposit getDeposit(Long envelope);
 
 }

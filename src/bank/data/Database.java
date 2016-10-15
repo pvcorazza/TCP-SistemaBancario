@@ -201,4 +201,14 @@ public class Database {
 	public void addUsedEnvelope(Long envelope){
 		this.usedEnvelopes.add(envelope);
 	}
+	
+	public Deposit getDeposit(Long envelope){
+		
+		for (Deposit deposit : pendingDeposits) {
+			if(deposit.getEnvelope() == envelope){
+				return deposit;
+			}
+		}
+		return null;
+	}
 }
