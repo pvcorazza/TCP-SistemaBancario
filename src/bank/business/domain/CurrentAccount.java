@@ -86,6 +86,14 @@ public class CurrentAccount implements Credentials {
 		//this.balance += amount;
 	}
 	
+	private void depositTranferAmount(double amount) throws BusinessException {
+		if (!isValidAmount(amount)) {
+			throw new BusinessException("exception.invalid.amount");
+		}
+
+		this.balance += amount;
+	}
+	
 	public void sumAmount(double amount){
 		this.balance += amount;
 	}
@@ -150,10 +158,13 @@ public class CurrentAccount implements Credentials {
 	}
 
 	public Transfer transfer(OperationLocation location,
-			CurrentAccount destinationAccount, double amount)
+			CurrentAccount destinationAccount, double amount,double itf)
 			throws BusinessException {
-		withdrawalAmount(amount);
-		destinationAccount.depositAmount(amount);
+		
+		double amountWithItf = amount+amount*itf;
+		
+		withdrawalAmount(amountWithItf);
+		destinationAccount.depositTranferAmount(amount);
 
 		Transfer transfer = new Transfer(location, this, destinationAccount,
 				amount);

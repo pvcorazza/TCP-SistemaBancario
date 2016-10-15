@@ -31,6 +31,7 @@ import bank.data.Database;
 public class AccountOperationServiceImpl implements AccountOperationService {
 
 	private final Database database;
+	private final double ITF = 0.002; //0.2%
 
 	public AccountOperationServiceImpl(Database database) {
 		this.database = database;
@@ -172,11 +173,14 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 	public Transfer transfer(long operationLocation, long srcBranch,
 			long srcAccountNumber, long dstBranch, long dstAccountNumber,
 			double amount) throws BusinessException {
+		
+		
+		
 		CurrentAccount source = readCurrentAccount(srcBranch, srcAccountNumber);
 		CurrentAccount destination = readCurrentAccount(dstBranch,
 				dstAccountNumber);
 		Transfer transfer = source.transfer(
-				getOperationLocation(operationLocation), destination, amount);
+				getOperationLocation(operationLocation), destination, amount,ITF);
 		return transfer;
 	}
 
