@@ -174,9 +174,10 @@ public class CurrentAccount implements Credentials {
 		return transfer;
 	}
 
-	public Withdrawal withdrawal(OperationLocation location, double amount)
+	public Withdrawal withdrawal(OperationLocation location, double amount,double itf)
 			throws BusinessException {
-		withdrawalAmount(amount);
+		double amountWithItf = amount+amount*itf;
+		withdrawalAmount(amountWithItf);
 
 		Withdrawal withdrawal = new Withdrawal(location, this, amount);
 		this.withdrawals.add(withdrawal);

@@ -20,6 +20,7 @@ public abstract class Transaction {
 		this.account = account;
 		this.amount = amount;
 		
+		
 	}
 
 	/**

@@ -181,6 +181,8 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 				dstAccountNumber);
 		Transfer transfer = source.transfer(
 				getOperationLocation(operationLocation), destination, amount,ITF);
+		//System.out.println("Valor com imposto = "+amount*ITF);
+		transfer.setAmountItf(amount*ITF);
 		return transfer;
 	}
 
@@ -190,7 +192,11 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 		CurrentAccount currentAccount = readCurrentAccount(branch,
 				accountNumber);
 		Withdrawal withdrawal = currentAccount.withdrawal(
-				getOperationLocation(operationLocation), amount);
+				getOperationLocation(operationLocation), amount,ITF);
+		
+		//System.out.println("Valor com imposto = "+amount*ITF);
+		withdrawal.setAmountItf(ITF*amount);
+		
 		return withdrawal;
 	}
 
