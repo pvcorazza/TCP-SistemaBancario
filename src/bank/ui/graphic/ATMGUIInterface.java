@@ -66,4 +66,9 @@ public class ATMGUIInterface extends BankGraphicInterface {
 				.getNumber() : null;
 	}
 
+	@Override
+	public void showPendingDepositMessage() {
+		// TODO Auto-generated method stub
+		
+	}
 }

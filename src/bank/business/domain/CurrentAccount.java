@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bank.business.BusinessException;
+import bank.business.domain.Deposit.DepositStatus;
+import bank.data.Database;
 
 /**
  * @author Ingrid Nunes
@@ -17,6 +19,9 @@ public class CurrentAccount implements Credentials {
 	private CurrentAccountId id;
 	private List<Transfer> transfers;
 	private List<Withdrawal> withdrawals;
+	
+	//save the deposit index that was not confirmed by employee
+//	private List<Integer> pendingIndexDeposits;
 
 	public CurrentAccount(Branch branch, long number, Client client) {
 		this.id = new CurrentAccountId(branch, number);
@@ -34,13 +39,41 @@ public class CurrentAccount implements Credentials {
 		this.balance = initialBalance;
 	}
 
+	/**
+	 * 
+	 * @param location
+	 * @param envelope
+	 * @param amount
+	 * @return
+	 * @throws BusinessException
+	 */
 	public Deposit deposit(OperationLocation location, long envelope,
 			double amount) throws BusinessException {
+		
+		
 		depositAmount(amount);
 
 		Deposit deposit = new Deposit(location, this, envelope, amount);
 		this.deposits.add(deposit);
-
+		
+		
+		switch (deposit.getStatus()) {
+			
+			case CONFIRMED:
+				//only confirmed deposit values are sum 
+				this.balance += amount;
+				break;
+			case PENDING:
+				// save the index of the deposit (last deposit)
+				// nothing to sum to the balance account because deposit status == PENDING
+				//this.pendingIndexDeposits.add(deposits.size()-1);
+				
+				break;
+				
+			default:
+				break;
+		}
+		
 		return deposit;
 	}
 
@@ -49,7 +82,7 @@ public class CurrentAccount implements Credentials {
 			throw new BusinessException("exception.invalid.amount");
 		}
 
-		this.balance += amount;
+		//this.balance += amount;
 	}
 
 	/**
@@ -102,7 +135,7 @@ public class CurrentAccount implements Credentials {
 	public List<Withdrawal> getWithdrawals() {
 		return withdrawals;
 	}
-
+	
 	private boolean hasEnoughBalance(double amount) {
 		return amount <= balance;
 	}
@@ -146,5 +179,7 @@ public class CurrentAccount implements Credentials {
 
 		this.balance -= amount;
 	}
+	
+	
 
 }

@@ -42,7 +42,7 @@ public abstract class BankGraphicInterface extends BankInterface {
 	private final JMenu mainMenu;
 	private final JMenuBar menu;
 	private final JPanel panel;
-	private final TextManager textManager;
+	protected final TextManager textManager;
 
 	public BankGraphicInterface(OperationLocation location,
 			TextManager textManager) {

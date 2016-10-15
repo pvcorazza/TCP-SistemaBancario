@@ -42,4 +42,9 @@ public class ATMInterface extends BankTextInterface {
 				.getNumber() : 0;
 	}
 
+	@Override
+	public void showPendingDepositMessage() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -42,6 +42,9 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 				accountNumber);
 		Deposit deposit = currentAccount.deposit(
 				getOperationLocation(operationLocation), envelope, amount);
+		
+		database.insertPendingDeposit(currentAccount.getId(), deposit);
+		
 		return deposit;
 	}
 

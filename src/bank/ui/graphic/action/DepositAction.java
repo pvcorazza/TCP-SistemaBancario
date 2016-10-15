@@ -50,6 +50,9 @@ public class DepositAction extends AccountAbstractAction {
 		super.putValue(Action.NAME, textManager.getText("action.deposit"));
 	}
 
+	/**
+	 * Show dialog
+	 * */
 	@Override
 	public void execute() {
 		JPanel panel = new JPanel(new BorderLayout());

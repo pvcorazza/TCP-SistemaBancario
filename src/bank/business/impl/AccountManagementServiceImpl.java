@@ -3,13 +3,18 @@
  */
 package bank.business.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
 
 import bank.business.AccountManagementService;
 import bank.business.BusinessException;
 import bank.business.domain.Branch;
 import bank.business.domain.Client;
 import bank.business.domain.CurrentAccount;
+import bank.business.domain.CurrentAccountId;
+import bank.business.domain.Deposit;
 import bank.business.domain.Employee;
 import bank.business.domain.OperationLocation;
 import bank.data.Database;
@@ -63,6 +68,12 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 		}
 
 		return employee;
+	}
+	
+	public Map<CurrentAccountId,ArrayList<Deposit>> getAllPendingDeposits(){
+
+		return database.getAllPendingDeposits();
+		
 	}
 
 }

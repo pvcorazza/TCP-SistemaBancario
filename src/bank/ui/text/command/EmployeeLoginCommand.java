@@ -26,6 +26,7 @@ public class EmployeeLoginCommand extends Command {
 
 		Employee employee = accountManagementService.login(username, password);
 		bankInterface.login(employee);
+		
 	}
 
 }

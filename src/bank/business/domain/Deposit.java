@@ -6,9 +6,6 @@ package bank.business.domain;
  * 
  */
 
-
-//Testando
-
 public class Deposit extends Transaction {
 
 	private long envelope;
@@ -46,5 +43,8 @@ public class Deposit extends Transaction {
 	public DepositStatus getStatus(){
 		return status;
 	}
-
+	
+	public void setStatusConfirmed(){
+		this.status = DepositStatus.CONFIRMED;
+	}
 }

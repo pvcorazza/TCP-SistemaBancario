@@ -53,6 +53,9 @@ public class EmployeeLoginAction extends BankAction {
 		setEnabled(true);
 	}
 
+	/**
+	 * Show login dialog
+	 * */
 	@Override
 	public void execute() throws Exception {
 		this.username = new JTextField();
@@ -93,6 +96,7 @@ public class EmployeeLoginAction extends BankAction {
 			bankInterface.login(employee);
 			dialog.dispose();
 			dialog = null;
+			
 		} catch (BusinessException be) {
 			GUIUtils.INSTANCE.showMessage(bankInterface.getFrame(),
 					be.getMessage(), be.getArgs(), JOptionPane.WARNING_MESSAGE);

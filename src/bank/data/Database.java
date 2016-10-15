@@ -3,6 +3,7 @@
  */
 package bank.data;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -18,6 +19,7 @@ import bank.business.domain.Branch;
 import bank.business.domain.Client;
 import bank.business.domain.CurrentAccount;
 import bank.business.domain.CurrentAccountId;
+import bank.business.domain.Deposit;
 import bank.business.domain.Employee;
 import bank.business.domain.OperationLocation;
 import bank.business.domain.Transaction;
@@ -32,6 +34,11 @@ public class Database {
 	private final Map<String, Employee> employees;
 	private final Log log;
 	private final Map<Long, OperationLocation> operationLocations;
+	
+	// save all the indexes of pending deposits according the CurrentAccountId
+	private final Map<CurrentAccountId,ArrayList<Deposit>> pendingDeposits;
+	
+	
 
 	public Database() {
 		this(true);
@@ -42,6 +49,9 @@ public class Database {
 		this.operationLocations = new HashMap<>();
 		this.employees = new HashMap<>();
 		this.currentAccounts = new HashMap<>();
+		this.pendingDeposits = new HashMap<>();
+		
+		
 		if (initData) {
 			initData();
 		}
@@ -152,5 +162,27 @@ public class Database {
 		this.operationLocations.put(operationLocation.getNumber(),
 				operationLocation);
 	}
+	
 
+	public void insertPendingDeposit(CurrentAccountId currentAccountId,Deposit deposit){
+		ArrayList<Deposit> array = pendingDeposits.get(currentAccountId);
+		if(array == null){
+			array = new ArrayList<>();
+			array.add(deposit);
+		}
+		this.pendingDeposits.put(currentAccountId,array);	
+	}
+	
+	public boolean hasPendingDeposits(){
+		if(pendingDeposits.size()>0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	public Map<CurrentAccountId,ArrayList<Deposit>> getAllPendingDeposits(){
+		return pendingDeposits;
+	}
 }

@@ -45,4 +45,10 @@ public class BranchInterface extends BankTextInterface {
 		return UIUtils.INSTANCE.readLong("account.number");
 	}
 
+	@Override
+	public void showPendingDepositMessage() {
+		System.out.println("showPendingDepositMessage()\n");
+		
+		
+	}
 }

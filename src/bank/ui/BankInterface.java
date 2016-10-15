@@ -11,6 +11,8 @@ import org.apache.commons.logging.LogFactory;
 
 import bank.business.domain.Credentials;
 import bank.business.domain.OperationLocation;
+import bank.data.Database;
+import bank.ui.graphic.action.PendingDepositsAction;
 
 /**
  * @author Ingrid Nunes
@@ -51,6 +53,7 @@ public abstract class BankInterface {
 		this.credentials = credentials;
 		if (isLoggedIn()) {
 			toggleActions();
+			showPendingDepositMessage();
 		}
 	}
 
@@ -62,11 +65,15 @@ public abstract class BankInterface {
 	public abstract Long readBranchId();
 
 	public abstract Long readCurrentAccountNumber();
+	
+	public abstract void showPendingDepositMessage();
 
+	/**
+	 * Show bank options when employee is logged 
+	 * */
 	protected void toggleActions() {
 		for (UIAction action : actions.values()) {
 			action.setEnabled(!action.isEnabled());
 		}
 	}
-
 }

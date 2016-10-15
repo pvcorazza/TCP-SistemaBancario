@@ -5,6 +5,8 @@ package bank.ui.graphic;
 
 import java.awt.GridLayout;
 
+import javax.swing.JOptionPane;
+
 import bank.business.AccountManagementService;
 import bank.business.AccountOperationService;
 import bank.business.domain.Branch;
@@ -16,6 +18,7 @@ import bank.ui.graphic.action.CheckDepositAction;
 import bank.ui.graphic.action.EmployeeLoginAction;
 import bank.ui.graphic.action.ExitAction;
 import bank.ui.graphic.action.LogoutAction;
+import bank.ui.graphic.action.PendingDepositsAction;
 import bank.ui.graphic.action.StatementAction;
 import bank.ui.graphic.action.TransferAction;
 import bank.ui.graphic.action.WithdrawalAction;
@@ -25,6 +28,8 @@ import bank.ui.graphic.action.WithdrawalAction;
  * 
  */
 public class BranchGUIInterface extends BankGraphicInterface {
+	
+	private PendingDepositsAction pendingDepositsAction;
 
 	public BranchGUIInterface(Branch location, TextManager textManager,
 			AccountManagementService accountManagementService,
@@ -54,6 +59,8 @@ public class BranchGUIInterface extends BankGraphicInterface {
 				accountOperationService));
 		addPanelAction(new CheckDepositAction(this, textManager,
 				accountManagementService));
+		
+		pendingDepositsAction = new PendingDepositsAction(this, textManager,accountManagementService);
 	}
 
 	@Override
@@ -71,4 +78,15 @@ public class BranchGUIInterface extends BankGraphicInterface {
 		return null;
 	}
 
+	@Override
+	public void showPendingDepositMessage() {
+			
+		try {	
+			pendingDepositsAction.execute();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		
+	}
 }
