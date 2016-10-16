@@ -5,6 +5,7 @@ package bank.ui.graphic.action;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -329,6 +330,9 @@ public class StatementAction extends AccountAbstractAction {
 		JScrollPane scrollPane = new JScrollPane(transactions,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
+		scrollPane.setPreferredSize(new Dimension(800,500));
+		
 		transactionsPanel.add(scrollPane);
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
