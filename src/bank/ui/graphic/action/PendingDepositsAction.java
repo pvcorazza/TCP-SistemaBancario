@@ -1,7 +1,9 @@
 package bank.ui.graphic.action;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -9,6 +11,8 @@ import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -96,24 +100,43 @@ public class PendingDepositsAction extends BankAction {
 
 		if (accountManagementService.hasPendingDeposits()) {
 
-			JFrame frame = new JFrame();
-			frame.setTitle("Depósitos Pendentes");
-			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+			final JDialog dialog = new JDialog();
+			
+			dialog.setTitle("Depósitos Pendentes");
+			dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			
 			JPanel transactionsPanel = new JPanel();
+			transactionsPanel.setLayout(new BorderLayout());
 			transactionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 			deposits_table = new JTable();
 			JScrollPane scrollPane = new JScrollPane(deposits_table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollPane.setPreferredSize(new Dimension(500,500));
-			transactionsPanel.add(scrollPane);
+			transactionsPanel.add(scrollPane, BorderLayout.NORTH);
 
-			frame.add(transactionsPanel);
+			dialog.add(transactionsPanel, BorderLayout.SOUTH);
+			
+			JButton btnUpdate = new JButton("Atualizar");
+			//btnUpdate.setBounds(204, 150, 100, 25);
+			btnUpdate.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+						try {
+							dialog.dispose();
+							execute();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					
+					}
 
-			frame.setLocationRelativeTo(null);
-			frame.pack();
-			frame.setVisible(true);
+			});
+			transactionsPanel.add(btnUpdate);
+
+			dialog.pack();
+			dialog.setVisible(true);
 
 			List<Deposit> deposits = accountManagementService.getAllPendingDeposits();
 			this.deposits_table.setModel(new TransactionTableModel(deposits));
