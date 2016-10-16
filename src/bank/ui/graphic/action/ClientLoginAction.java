@@ -90,6 +90,8 @@ public class ClientLoginAction extends BankAction {
 
 		this.dialog = GUIUtils.INSTANCE.createDialog(bankInterface.getFrame(),
 				"action.login", panel);
+		this.dialog.getRootPane().setDefaultButton(ok);
+		ok.requestFocus();
 		this.dialog.setVisible(true);
 	}
 
