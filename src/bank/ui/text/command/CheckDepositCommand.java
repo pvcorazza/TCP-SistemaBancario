@@ -1,5 +1,6 @@
 package bank.ui.text.command;
 
+import java.text.NumberFormat;
 import java.util.Scanner;
 
 import bank.business.AccountOperationService;
@@ -26,24 +27,23 @@ public class CheckDepositCommand extends Command {
 		readOption = new Scanner(System.in);
 
 		try {
-			System.out.println("Digite o número do envelope: ");
+			System.out.print("Digite o número do envelope: ");
 			envelope = readEnvelope.nextLong();
 			if (accountOperationService.isUsedEnvelope(envelope)) {
 				deposit = accountOperationService.getDeposit(envelope);
 				if (deposit != null) {
 					System.out.println("Envelope encontrado!");
-					System.out.println("Quantia = " + deposit.getAmount() + "\n");
 					System.out.println("Conta: " + deposit.getAccount().getId().getNumber());
 					System.out.println("Agência: " + deposit.getAccount().getId().getBranch().getNumber() + " - " + ""
 							+ deposit.getAccount().getId().getBranch().getName());
-					System.out.println("Valor: " + deposit.getAmount());
+					System.out.println("Valor: " + NumberFormat.getCurrencyInstance().format((deposit.getAmount())));
 					System.out.println("Opções (ou E para sair):");
 					System.out.println("C - Confirmar Depósito");
 					System.out.println("R - Rejeitar Depósito");
+					System.out.print("Escolha uma opção: ");
 					switch (readOption.nextLine().charAt(0)) {
 
 					case 'C':
-						System.out.println("Temos deposito\n");
 						deposit.setStatusConfirmed();
 						System.out.println("Depósito confirmado com sucesso!");
 						accountOperationService.confirmDeposit(deposit);
@@ -52,7 +52,6 @@ public class CheckDepositCommand extends Command {
 						deposit = null;
 						break;
 					case 'R':
-						System.out.println("Temos deposito\n");
 						accountOperationService.rejectDeposit(deposit);
 						accountOperationService.deletePendingDeposit(deposit);
 						System.out.println("Depósito rejeitado com sucesso!");
@@ -75,19 +74,6 @@ public class CheckDepositCommand extends Command {
 		}
 		;
 
-		// Long branch = bankInterface.readBranchId();
-		// Long accountNumber = bankInterface.readCurrentAccountNumber();
-		// Long envelope = UIUtils.INSTANCE.readLong("envelope");
-		// Double amount = UIUtils.INSTANCE.readDouble("amount");
-		//
-		// Deposit deposit =
-		// accountOperationService.deposit(bankInterface.getOperationLocation().getNumber(),
-		// branch,
-		// accountNumber, envelope, amount);
-		//
-		// System.out.println(getTextManager().getText("message.operation.succesfull"));
-		// System.out.println(getTextManager().getText("deposit") + ": " +
-		// deposit.getAmount());
 	}
 
 }

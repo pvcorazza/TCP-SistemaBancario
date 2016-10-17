@@ -98,11 +98,11 @@ public class CheckDepositAction extends BankAction {
 						deposit = accountOperationService.getDeposit(envelope);
 						if (deposit != null) {
 							lblConfirmation.setText("Envelope encontrado!");
-							System.out.println("Quantia = " + deposit.getAmount() + "\n");
 							textFieldAccount.setText("" + deposit.getAccount().getId().getNumber());
 							textFieldBranch.setText("" + deposit.getAccount().getId().getBranch().getNumber() + " - "
 									+ "" + deposit.getAccount().getId().getBranch().getName());
-							textFieldAmount.setText("" + deposit.getAmount());
+							textFieldAmount
+									.setText("" + NumberFormat.getCurrencyInstance().format((deposit.getAmount())));
 						} else {
 							lblConfirmation.setText("Esse envelope já foi analisado!");
 						}
@@ -127,12 +127,8 @@ public class CheckDepositAction extends BankAction {
 			public void actionPerformed(ActionEvent arg0) {
 
 				if (deposit == null) {
-					// exception
-					System.out.println("nao tem deposito\n");
 					lblConfirmation.setText("Clique em Buscar!");
 				} else {
-					System.out.println("Temos deposito\n");
-
 					deposit.setStatusConfirmed();
 					lblConfirmation.setText("Depósito confirmado com sucesso!");
 					accountOperationService.confirmDeposit(deposit);
@@ -161,12 +157,8 @@ public class CheckDepositAction extends BankAction {
 			public void actionPerformed(ActionEvent arg0) {
 
 				if (deposit == null) {
-					// exception
-					System.out.println("nao tem deposito\n");
 					lblConfirmation.setText("Clique em Buscar!");
 				} else {
-					System.out.println("Temos deposito\n");
-
 					accountOperationService.rejectDeposit(deposit);
 					accountOperationService.deletePendingDeposit(deposit);
 					lblConfirmation.setText("Depósito rejeitado com sucesso!");

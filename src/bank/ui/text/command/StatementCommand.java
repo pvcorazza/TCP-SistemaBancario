@@ -79,8 +79,8 @@ public class StatementCommand extends Command {
 		sb.append(getTextManager().getText("date")).append("\t\t\t");
 		sb.append(getTextManager().getText("location")).append("\t");
 		sb.append(getTextManager().getText("operation.type")).append("\t");
-		sb.append(getTextManager().getText("details")).append("\t\t");
-		sb.append(getTextManager().getText("amount")).append("\t\t\t");
+		sb.append(getTextManager().getText("details")).append("\t\t\t");
+		sb.append(getTextManager().getText("amount")).append("\t\t");
 		sb.append(getTextManager().getText("status")).append("\n");
 		sb.append(
 				"-------------------------------------------------------------------------------------------------------------------------------------\n");
@@ -91,24 +91,24 @@ public class StatementCommand extends Command {
 				sb.append("\t");
 			sb.append(getTextManager().getText("operation." + transaction.getClass().getSimpleName())).append("\t\t");
 			if (transaction instanceof Deposit) {
-				sb.append(((Deposit) transaction).getEnvelope()).append("\t\t\t");
+				sb.append(((Deposit) transaction).getEnvelope()).append("\t\t\t\t");
 				sb.append("+ ").append(NumberFormat.getCurrencyInstance().format((transaction.getAmount())));
 			} else if (transaction instanceof Transfer) {
 				Transfer transfer = (Transfer) transaction;
 				if (transfer.getAccount().getId().equals(caId)) {
 					CurrentAccountId dstId = transfer.getDestinationAccount().getId();
-					sb.append("AG ").append(dstId.getBranch().getNumber()).append(" C/C ").append(dstId.getNumber())
-							.append(" ITF=").append(transfer.getAmountItf()).append("\t");
+					sb.append("AG ").append(dstId.getBranch().getNumber()).append(", C/C ").append(dstId.getNumber())
+							.append(", ITF=").append(NumberFormat.getCurrencyInstance().format((transfer.getAmountItf()))).append("\t");
 					sb.append("- ");
 				} else {
 					CurrentAccountId srcId = transfer.getAccount().getId();
-					sb.append("AG ").append(srcId.getBranch().getNumber()).append(" C/C ").append(srcId.getNumber())
-							.append("\t\t");
+					sb.append("AG ").append(srcId.getBranch().getNumber()).append(", C/C ").append(srcId.getNumber())
+							.append("\t\t\t");
 					sb.append("+ ");
 				}
 				sb.append(NumberFormat.getCurrencyInstance().format((transaction.getAmount())));
 			} else if (transaction instanceof Withdrawal) {
-				sb.append("\tITF=" + ((Withdrawal) transaction).getAmountItf()).append("\t\t\t").append("- ")
+				sb.append("\tITF=" + NumberFormat.getCurrencyInstance().format((((Withdrawal) transaction).getAmountItf()))).append("\t\t\t").append("- ")
 						.append(NumberFormat.getCurrencyInstance().format((transaction.getAmount())));
 			}
 			if (transaction instanceof Deposit) {
