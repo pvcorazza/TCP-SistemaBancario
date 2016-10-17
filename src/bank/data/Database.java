@@ -35,13 +35,11 @@ public class Database {
 	private final Map<String, Employee> employees;
 	private final Log log;
 	private final Map<Long, OperationLocation> operationLocations;
-	
+
 	// save all the pending deposits according
 	private final ArrayList<Deposit> pendingDeposits;
-	
+
 	private final ArrayList<Long> usedEnvelopes;
-	
-	
 
 	public Database() {
 		this(true);
@@ -54,10 +52,7 @@ public class Database {
 		this.currentAccounts = new HashMap<>();
 		this.pendingDeposits = new ArrayList<>();
 		this.usedEnvelopes = new ArrayList<>();
-		
-		
-		
-			
+
 		if (initData) {
 			initData();
 		}
@@ -109,17 +104,14 @@ public class Database {
 			save(atm3);
 
 			// Employee
-			Employee employee = new Employee("Ingrid", "Nunes", "ingrid",
-					"123", new Date());
+			Employee employee = new Employee("Ingrid", "Nunes", "ingrid", "123", new Date());
 			save(employee);
 
 			// Current Accounts
-			Client client1 = new Client("Ingrid", "Nunes", 1234567890, "123",
-					new Date());
+			Client client1 = new Client("Ingrid", "Nunes", 1234567890, "123", new Date());
 			CurrentAccount ca1 = new CurrentAccount(b1, 1l, client1, 300);
 			save(ca1);
-			Client client2 = new Client("Joao", "Silva", 1234567890, "123",
-					new Date());
+			Client client2 = new Client("Joao", "Silva", 1234567890, "123", new Date());
 			CurrentAccount ca2 = new CurrentAccount(b2, 2l, client2, 200);
 			save(ca2);
 
@@ -127,22 +119,24 @@ public class Database {
 			Random r = new Random(System.currentTimeMillis());
 			Calendar cal = Calendar.getInstance();
 			for (int i = 0; i < 8; i++) {
-				changeDate(
-						ca1.deposit(b1, r.nextInt(10000), r.nextDouble() * 150),
-						r, cal);
-				Deposit dp1 = new Deposit(b1, ca1, r.nextInt(10000), r.nextDouble() * 150);
+				Deposit dp1 = ca1.deposit(b1, r.nextInt(10000), r.nextDouble() * 150);
+				changeDate(dp1, r, cal);
 				insertPendingDeposit(dp1);
+				addUsedEnvelope(dp1.getEnvelope());
 				
-				changeDate(ca1.withdrawal(atm1, r.nextDouble() * 100), r, cal);
-				changeDate(ca1.transfer(atm2, ca2, r.nextDouble() * 100), r,
-						cal);
+//				Deposit dp1 = new Deposit(b1, ca1, r.nextInt(10000), r.nextDouble() * 150);
+//				insertPendingDeposit(dp1);
+//				addUsedEnvelope(dp1.getEnvelope());
 
-				changeDate(
-						ca2.deposit(b2, r.nextInt(10000), r.nextDouble() * 150),
-						r, cal);
+				changeDate(ca1.withdrawal(atm1, r.nextDouble() * 100), r, cal);
+				changeDate(ca1.transfer(atm2, ca2, r.nextDouble() * 100), r, cal);
+
+				Deposit dp2 = ca2.deposit(b2, r.nextInt(10000), r.nextDouble() * 150);
+				changeDate(dp2, r, cal);
+				insertPendingDeposit(dp2);
+				addUsedEnvelope(dp2.getEnvelope());
 				changeDate(ca2.withdrawal(atm2, r.nextDouble() * 100), r, cal);
-				changeDate(ca2.transfer(atm3, ca1, r.nextDouble() * 100), r,
-						cal);
+				changeDate(ca2.transfer(atm3, ca1, r.nextDouble() * 100), r, cal);
 
 				cal.add(Calendar.MONTH, -1);
 			}
@@ -168,64 +162,59 @@ public class Database {
 	}
 
 	public void save(OperationLocation operationLocation) {
-		this.operationLocations.put(operationLocation.getNumber(),
-				operationLocation);
+		this.operationLocations.put(operationLocation.getNumber(), operationLocation);
 	}
-	
 
-	public void insertPendingDeposit(Deposit deposit){
+	public void insertPendingDeposit(Deposit deposit) {
 
 		this.pendingDeposits.add(deposit);
 	}
-	
-	
-	public ArrayList<Deposit> getAllPendingDeposits(){
+
+	public ArrayList<Deposit> getAllPendingDeposits() {
 		return pendingDeposits;
 	}
-	
-	public boolean hasPendingDeposits(){
-		if(pendingDeposits.size() == 0){
+
+	public boolean hasPendingDeposits() {
+		if (pendingDeposits.size() == 0) {
 			return false;
-		}
-		else{
+		} else {
 			return true;
 		}
 	}
-	
-	public boolean isUsedEnvelope(Long envelope){
-		if(usedEnvelopes.contains(envelope)){
+
+	public boolean isUsedEnvelope(Long envelope) {
+		if (usedEnvelopes.contains(envelope)) {
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
-	
-	public void addUsedEnvelope(Long envelope){
+
+	public void addUsedEnvelope(Long envelope) {
 		this.usedEnvelopes.add(envelope);
 	}
-	
-	public Deposit getDeposit(Long envelope){
-		
+
+	public Deposit getDeposit(Long envelope) {
+
 		for (Deposit deposit : pendingDeposits) {
-			if(deposit.getEnvelope() == envelope){
+			if (deposit.getEnvelope() == envelope) {
 				return deposit;
 			}
 		}
 		return null;
 	}
-	
-	public void confirmDeposit(Deposit deposit){
+
+	public void confirmDeposit(Deposit deposit) {
 		pendingDeposits.get(pendingDeposits.indexOf(deposit)).setStatusConfirmed();
 	}
-	
-	public void rejectDeposit(Deposit deposit){
+
+	public void rejectDeposit(Deposit deposit) {
 		pendingDeposits.get(pendingDeposits.indexOf(deposit)).setStatusRejected();
 	}
-	
-	public void deletePendingDeposit(Deposit deposit) throws BusinessException{
-		if(pendingDeposits.remove(deposit) == false){
-			throw new BusinessException("exception.deposit.allreadyConfirmed"); 
+
+	public void deletePendingDeposit(Deposit deposit) throws BusinessException {
+		if (pendingDeposits.remove(deposit) == false) {
+			throw new BusinessException("exception.deposit.allreadyConfirmed");
 		}
 	}
 }
