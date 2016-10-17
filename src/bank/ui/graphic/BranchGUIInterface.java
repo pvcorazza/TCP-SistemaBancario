@@ -5,16 +5,14 @@ package bank.ui.graphic;
 
 import java.awt.GridLayout;
 
-import javax.swing.JOptionPane;
-
 import bank.business.AccountManagementService;
 import bank.business.AccountOperationService;
 import bank.business.domain.Branch;
 import bank.ui.TextManager;
 import bank.ui.graphic.action.BalanceAction;
+import bank.ui.graphic.action.CheckDepositAction;
 import bank.ui.graphic.action.CreateAccountAction;
 import bank.ui.graphic.action.DepositAction;
-import bank.ui.graphic.action.CheckDepositAction;
 import bank.ui.graphic.action.EmployeeLoginAction;
 import bank.ui.graphic.action.ExitAction;
 import bank.ui.graphic.action.LogoutAction;

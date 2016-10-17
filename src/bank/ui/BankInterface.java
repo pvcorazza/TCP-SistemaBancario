@@ -11,8 +11,6 @@ import org.apache.commons.logging.LogFactory;
 
 import bank.business.domain.Credentials;
 import bank.business.domain.OperationLocation;
-import bank.data.Database;
-import bank.ui.graphic.action.PendingDepositsAction;
 
 /**
  * @author Ingrid Nunes

@@ -4,10 +4,12 @@ import bank.business.AccountManagementService;
 import bank.business.AccountOperationService;
 import bank.business.domain.Branch;
 import bank.ui.text.command.BalanceCommand;
+import bank.ui.text.command.CheckDepositCommand;
 import bank.ui.text.command.CreateAccountCommand;
 import bank.ui.text.command.DepositCommand;
 import bank.ui.text.command.EmployeeLoginCommand;
 import bank.ui.text.command.LogoutCommand;
+import bank.ui.text.command.PendingDepositsCommand;
 import bank.ui.text.command.StatementCommand;
 import bank.ui.text.command.TransferCommand;
 import bank.ui.text.command.WithdrawalCommand;
@@ -17,6 +19,8 @@ import bank.ui.text.command.WithdrawalCommand;
  * 
  */
 public class BranchInterface extends BankTextInterface {
+	
+	private PendingDepositsCommand pendingDepositsCommand;
 
 	public BranchInterface(Branch branch,
 			AccountManagementService accountManagementService,
@@ -32,7 +36,9 @@ public class BranchInterface extends BankTextInterface {
 		this.addAction("W",
 				new WithdrawalCommand(this, accountOperationService));
 		this.addAction("T", new TransferCommand(this, accountOperationService));
+		this.addAction("V", new CheckDepositCommand(this, accountOperationService));
 		this.addAction("O", new LogoutCommand(this));
+		pendingDepositsCommand = new PendingDepositsCommand(this, accountOperationService,accountManagementService);
 	}
 
 	@Override
@@ -47,7 +53,11 @@ public class BranchInterface extends BankTextInterface {
 
 	@Override
 	public void showPendingDepositMessage() {
-		System.out.println("showPendingDepositMessage()\n");
+		try {	
+			pendingDepositsCommand.execute();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		
 		
 	}

@@ -153,7 +153,10 @@ public class StatementAction extends AccountAbstractAction {
 							.getId() : transfer.getAccount().getId();
 					sb.append("AG ").append(otherId.getBranch().getNumber())
 							.append(" C/C ").append(otherId.getNumber());
-					sb.append(" ITF amount= ").append(transfer.getAmountItf());
+					
+					if (transfer.getAccount().getId().equals(id)) {
+						sb.append(" ITF amount= ").append(transfer.getAmountItf());
+					}
 					val = sb.toString();
 				} else if (t instanceof Withdrawal) {
 					val = " ITF amount="+((Withdrawal) t).getAmountItf();
