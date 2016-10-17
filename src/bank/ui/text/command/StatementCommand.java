@@ -3,6 +3,7 @@
  */
 package bank.ui.text.command;
 
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -91,7 +92,7 @@ public class StatementCommand extends Command {
 			sb.append(getTextManager().getText("operation." + transaction.getClass().getSimpleName())).append("\t\t");
 			if (transaction instanceof Deposit) {
 				sb.append(((Deposit) transaction).getEnvelope()).append("\t\t\t");
-				sb.append("+ ").append(transaction.getAmount());
+				sb.append("+ ").append(NumberFormat.getCurrencyInstance().format((transaction.getAmount())));
 			} else if (transaction instanceof Transfer) {
 				Transfer transfer = (Transfer) transaction;
 				if (transfer.getAccount().getId().equals(caId)) {
@@ -105,10 +106,10 @@ public class StatementCommand extends Command {
 							.append("\t\t");
 					sb.append("+ ");
 				}
-				sb.append(transaction.getAmount());
+				sb.append(NumberFormat.getCurrencyInstance().format((transaction.getAmount())));
 			} else if (transaction instanceof Withdrawal) {
 				sb.append("\tITF=" + ((Withdrawal) transaction).getAmountItf()).append("\t\t\t").append("- ")
-						.append(transaction.getAmount());
+						.append(NumberFormat.getCurrencyInstance().format((transaction.getAmount())));
 			}
 			if (transaction instanceof Deposit) {
 

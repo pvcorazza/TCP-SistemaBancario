@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -166,16 +167,16 @@ public class StatementAction extends AccountAbstractAction {
 				break;
 			case 4:
 				if (t instanceof Deposit) {
-					val = "+ " + t.getAmount();
+					val = "+ " + NumberFormat.getCurrencyInstance().format((t.getAmount()));
 				} else if (t instanceof Transfer) {
 					Transfer transfer = (Transfer) t;
 					if (transfer.getAccount().getId().equals(id)) {
-						val = "- " + t.getAmount();
+						val = "- " + NumberFormat.getCurrencyInstance().format((t.getAmount()));
 					} else {
-						val = "+ " + t.getAmount();
+						val = "+ " + NumberFormat.getCurrencyInstance().format((t.getAmount()));
 					}
 				} else if (t instanceof Withdrawal) {
-					val = "- " + t.getAmount();
+					val = "- " + NumberFormat.getCurrencyInstance().format((t.getAmount()));
 				} else {
 					assert false;
 				}
