@@ -7,7 +7,7 @@ package bank.business.domain;
 public class Transfer extends Transaction {
 
 	private CurrentAccount destinationAccount;
-	private double amounItf;
+	private double amountItf;
 
 	public Transfer(OperationLocation location, CurrentAccount account,
 			CurrentAccount destinationAccount, double amount) {
@@ -23,11 +23,11 @@ public class Transfer extends Transaction {
 	}
 
 	public double getAmountItf() {
-		return amounItf;
+		return amountItf;
 	}
 
 	public void setAmountItf(double amountWithItf) {
-		this.amounItf = amountWithItf;
+		this.amountItf = amountWithItf;
 	}
 
 }

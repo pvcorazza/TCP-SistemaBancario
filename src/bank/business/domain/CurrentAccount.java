@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bank.business.BusinessException;
-import bank.business.domain.Deposit.DepositStatus;
-import bank.data.Database;
 
 /**
  * @author Ingrid Nunes
@@ -115,7 +113,7 @@ public class CurrentAccount implements Credentials {
 
 	/**
 	 * @return the deposits
-	 */
+	 
 	public List<Deposit> getDeposits() {
 		return deposits;
 	}

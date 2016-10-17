@@ -30,7 +30,7 @@ public class PendingDepositsAction extends BankAction {
 
 	private static final long serialVersionUID = 5568655004864764509L;
 	private final AccountManagementService accountManagementService;
-	private JTable deposits_table;
+	private JTable depositsTable;
 
 	public PendingDepositsAction(BankGraphicInterface bankInterface, TextManager textManager,
 			AccountManagementService accountManagementService) {
@@ -45,9 +45,7 @@ public class PendingDepositsAction extends BankAction {
 	private class TransactionTableModel extends AbstractTableModel {
 
 		private static final long serialVersionUID = 2497950520925208080L;
-
 		private String[] columnNames = { "Data", "Detalhes", "Local", "Valor" };
-
 		private List<Deposit> deposits;
 
 		public TransactionTableModel(List<Deposit> deposits) {
@@ -109,8 +107,8 @@ public class PendingDepositsAction extends BankAction {
 			transactionsPanel.setLayout(new BorderLayout());
 			transactionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-			deposits_table = new JTable();
-			JScrollPane scrollPane = new JScrollPane(deposits_table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+			depositsTable = new JTable();
+			JScrollPane scrollPane = new JScrollPane(depositsTable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollPane.setPreferredSize(new Dimension(500,500));
 			transactionsPanel.add(scrollPane, BorderLayout.NORTH);
@@ -139,7 +137,7 @@ public class PendingDepositsAction extends BankAction {
 			dialog.setVisible(true);
 
 			List<Deposit> deposits = accountManagementService.getAllPendingDeposits();
-			this.deposits_table.setModel(new TransactionTableModel(deposits));
+			this.depositsTable.setModel(new TransactionTableModel(deposits));
 			
 		}
 

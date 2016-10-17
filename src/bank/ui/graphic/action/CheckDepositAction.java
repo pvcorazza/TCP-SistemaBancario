@@ -36,7 +36,6 @@ public class CheckDepositAction extends BankAction {
 	private JLabel lblAgencia;
 	private JLabel lblValor;
 	private JLabel lblEnvelope;
-
 	Deposit deposit;
 
 	public CheckDepositAction(BankGraphicInterface bankInterface, TextManager textManager,

@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.sql.rowset.spi.TransactionalWriter;
-
 import bank.business.AccountOperationService;
 import bank.business.BusinessException;
 import bank.business.domain.Branch;
@@ -31,70 +29,57 @@ import bank.data.Database;
 public class AccountOperationServiceImpl implements AccountOperationService {
 
 	private final Database database;
-	
 
 	public AccountOperationServiceImpl(Database database) {
 		this.database = database;
 	}
 
 	@Override
-	public Deposit deposit(long operationLocation, long branch,
-			long accountNumber, long envelope, double amount)
+	public Deposit deposit(long operationLocation, long branch, long accountNumber, long envelope, double amount)
 			throws BusinessException {
-		
-		
-		if(database.isUsedEnvelope(envelope)){
+
+		if (database.isUsedEnvelope(envelope)) {
 			throw new BusinessException("exception.envelope.allreadyUsed");
-		}
-		else{
-			
-			
-			CurrentAccount currentAccount = readCurrentAccount(branch,
-					accountNumber);
-			Deposit deposit = currentAccount.deposit(
-					getOperationLocation(operationLocation), envelope, amount);
-			
+		} else {
+
+			CurrentAccount currentAccount = readCurrentAccount(branch, accountNumber);
+			Deposit deposit = currentAccount.deposit(getOperationLocation(operationLocation), envelope, amount);
+
 			database.insertPendingDeposit(deposit);
 			database.addUsedEnvelope(envelope);
 			return deposit;
 		}
-		
-	}
-	
-	@Override
-	public void updateDepositStatus(Deposit deposit) throws BusinessException{
-		CurrentAccount currentAccount = readCurrentAccount(deposit.getAccount().getId().getBranch().getNumber(),
-				deposit.getAccount().getId().getNumber());
-		
-		currentAccount.confirmDeposit(deposit);
-		currentAccount.sumAmount(deposit.getAmount());
-		
+
 	}
 
 	@Override
-	public double getBalance(long branch, long accountNumber)
-			throws BusinessException {
+	public void updateDepositStatus(Deposit deposit) throws BusinessException {
+		CurrentAccount currentAccount = readCurrentAccount(deposit.getAccount().getId().getBranch().getNumber(),
+				deposit.getAccount().getId().getNumber());
+
+		currentAccount.confirmDeposit(deposit);
+		currentAccount.sumAmount(deposit.getAmount());
+
+	}
+
+	@Override
+	public double getBalance(long branch, long accountNumber) throws BusinessException {
 		return readCurrentAccount(branch, accountNumber).getBalance();
 	}
 
-	
-	private OperationLocation getOperationLocation(long operationLocationNumber)
-			throws BusinessException {
-		OperationLocation operationLocation = database
-				.getOperationLocation(operationLocationNumber);
+	private OperationLocation getOperationLocation(long operationLocationNumber) throws BusinessException {
+		OperationLocation operationLocation = database.getOperationLocation(operationLocationNumber);
 		if (operationLocation == null) {
 			throw new BusinessException("exception.invalid.operation.location");
 		}
 		return operationLocation;
 	}
 
-	private List<Transaction> getStatementByDate(CurrentAccount currentAccount,
-			Date begin, Date end) {
+	private List<Transaction> getStatementByDate(CurrentAccount currentAccount, Date begin, Date end) {
 		List<Transaction> selectedTransactions = new LinkedList<>();
 
 		for (Transaction transaction : currentAccount.getTransactions()) {
-			if (transaction.getDate().before(begin)
-					|| transaction.getDate().after(end))
+			if (transaction.getDate().before(begin) || transaction.getDate().after(end))
 				continue;
 			else
 				selectedTransactions.add(transaction);
@@ -111,28 +96,23 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 	}
 
 	@Override
-	public List<Transaction> getStatementByDate(long branch,
-			long accountNumber, Date begin, Date end) throws BusinessException {
-		return getStatementByDate(readCurrentAccount(branch, accountNumber),
-				begin, end);
+	public List<Transaction> getStatementByDate(long branch, long accountNumber, Date begin, Date end)
+			throws BusinessException {
+		return getStatementByDate(readCurrentAccount(branch, accountNumber), begin, end);
 	}
 
 	@Override
-	public List<Transaction> getStatementByMonth(long branch,
-			long accountNumber, int month, int year) throws BusinessException {
+	public List<Transaction> getStatementByMonth(long branch, long accountNumber, int month, int year)
+			throws BusinessException {
 		// First Day
 		Calendar firstDay = Calendar.getInstance();
 		firstDay.set(Calendar.DAY_OF_MONTH, 1);
 		firstDay.set(Calendar.MONTH, month);
 		firstDay.set(Calendar.YEAR, year);
-		firstDay.set(Calendar.HOUR_OF_DAY,
-				firstDay.getActualMinimum(Calendar.HOUR_OF_DAY));
-		firstDay.set(Calendar.MINUTE,
-				firstDay.getActualMinimum(Calendar.MINUTE));
-		firstDay.set(Calendar.SECOND,
-				firstDay.getActualMinimum(Calendar.SECOND));
-		firstDay.set(Calendar.MILLISECOND,
-				firstDay.getActualMinimum(Calendar.MILLISECOND));
+		firstDay.set(Calendar.HOUR_OF_DAY, firstDay.getActualMinimum(Calendar.HOUR_OF_DAY));
+		firstDay.set(Calendar.MINUTE, firstDay.getActualMinimum(Calendar.MINUTE));
+		firstDay.set(Calendar.SECOND, firstDay.getActualMinimum(Calendar.SECOND));
+		firstDay.set(Calendar.MILLISECOND, firstDay.getActualMinimum(Calendar.MILLISECOND));
 
 		// Last Day
 		Calendar lastDay = Calendar.getInstance();
@@ -140,15 +120,12 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 		lastDay.add(Calendar.MONTH, 1);
 		lastDay.add(Calendar.MILLISECOND, -1);
 
-		return getStatementByDate(readCurrentAccount(branch, accountNumber),
-				firstDay.getTime(), lastDay.getTime());
+		return getStatementByDate(readCurrentAccount(branch, accountNumber), firstDay.getTime(), lastDay.getTime());
 	}
 
 	@Override
-	public CurrentAccount login(long branch, long accountNumber, String password)
-			throws BusinessException {
-		CurrentAccount currentAccount = readCurrentAccount(branch,
-				accountNumber);
+	public CurrentAccount login(long branch, long accountNumber, String password) throws BusinessException {
+		CurrentAccount currentAccount = readCurrentAccount(branch, accountNumber);
 		if (!currentAccount.getClient().getPassword().equals(password)) {
 			throw new BusinessException("exception.invalid.password");
 		}
@@ -156,10 +133,8 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 		return currentAccount;
 	}
 
-	private CurrentAccount readCurrentAccount(long branch, long accountNumber)
-			throws BusinessException {
-		CurrentAccountId id = new CurrentAccountId(new Branch(branch),
-				accountNumber);
+	private CurrentAccount readCurrentAccount(long branch, long accountNumber) throws BusinessException {
+		CurrentAccountId id = new CurrentAccountId(new Branch(branch), accountNumber);
 		CurrentAccount currentAccount = database.getCurrentAccount(id);
 
 		if (currentAccount == null) {
@@ -170,55 +145,47 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 	}
 
 	@Override
-	public Transfer transfer(long operationLocation, long srcBranch,
-			long srcAccountNumber, long dstBranch, long dstAccountNumber,
-			double amount) throws BusinessException {
-		
-		
-		
+	public Transfer transfer(long operationLocation, long srcBranch, long srcAccountNumber, long dstBranch,
+			long dstAccountNumber, double amount) throws BusinessException {
+
 		CurrentAccount source = readCurrentAccount(srcBranch, srcAccountNumber);
-		CurrentAccount destination = readCurrentAccount(dstBranch,
-				dstAccountNumber);
-		Transfer transfer = source.transfer(
-				getOperationLocation(operationLocation), destination, amount);
+		CurrentAccount destination = readCurrentAccount(dstBranch, dstAccountNumber);
+		Transfer transfer = source.transfer(getOperationLocation(operationLocation), destination, amount);
 
 		return transfer;
 	}
 
 	@Override
-	public Withdrawal withdrawal(long operationLocation, long branch,
-			long accountNumber, double amount) throws BusinessException {
-		CurrentAccount currentAccount = readCurrentAccount(branch,
-				accountNumber);
-		Withdrawal withdrawal = currentAccount.withdrawal(
-				getOperationLocation(operationLocation), amount);
-		
-		
+	public Withdrawal withdrawal(long operationLocation, long branch, long accountNumber, double amount)
+			throws BusinessException {
+		CurrentAccount currentAccount = readCurrentAccount(branch, accountNumber);
+		Withdrawal withdrawal = currentAccount.withdrawal(getOperationLocation(operationLocation), amount);
+
 		return withdrawal;
 	}
 
 	@Override
 	public Deposit getDeposit(Long envelope) {
-		
+
 		return database.getDeposit(envelope);
 	}
-	
+
 	@Override
 	public boolean isUsedEnvelope(Long envelope) {
 		return database.isUsedEnvelope(envelope);
-		
+
 	}
 
 	@Override
 	public void confirmDeposit(Deposit deposit) {
-		
+
 		database.confirmDeposit(deposit);
-		
+
 	}
-	
+
 	@Override
 	public void rejectDeposit(Deposit deposit) {
-		
+
 		database.rejectDeposit(deposit);
 	}
 
@@ -229,7 +196,6 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
-		
+
 	}
 }
