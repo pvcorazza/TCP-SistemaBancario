@@ -31,7 +31,7 @@ import bank.data.Database;
 public class AccountOperationServiceImpl implements AccountOperationService {
 
 	private final Database database;
-	private final double ITF = 0.002; //0.2%
+	
 
 	public AccountOperationServiceImpl(Database database) {
 		this.database = database;
@@ -180,9 +180,9 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 		CurrentAccount destination = readCurrentAccount(dstBranch,
 				dstAccountNumber);
 		Transfer transfer = source.transfer(
-				getOperationLocation(operationLocation), destination, amount,ITF);
+				getOperationLocation(operationLocation), destination, amount);
 		//System.out.println("Valor com imposto = "+amount*ITF);
-		transfer.setAmountItf(amount*ITF);
+		
 		return transfer;
 	}
 
@@ -192,10 +192,9 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 		CurrentAccount currentAccount = readCurrentAccount(branch,
 				accountNumber);
 		Withdrawal withdrawal = currentAccount.withdrawal(
-				getOperationLocation(operationLocation), amount,ITF);
+				getOperationLocation(operationLocation), amount);
 		
 		//System.out.println("Valor com imposto = "+amount*ITF);
-		withdrawal.setAmountItf(ITF*amount);
 		
 		return withdrawal;
 	}

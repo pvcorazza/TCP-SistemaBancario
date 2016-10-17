@@ -19,6 +19,7 @@ public class CurrentAccount implements Credentials {
 	private CurrentAccountId id;
 	private List<Transfer> transfers;
 	private List<Withdrawal> withdrawals;
+	private final double ITF = 0.002; //0.2%
 	
 	//save the deposit index that was not confirmed by employee
 //	private List<Integer> pendingIndexDeposits;
@@ -158,29 +159,31 @@ public class CurrentAccount implements Credentials {
 	}
 
 	public Transfer transfer(OperationLocation location,
-			CurrentAccount destinationAccount, double amount,double itf)
+			CurrentAccount destinationAccount, double amount)
 			throws BusinessException {
 		
-		double amountWithItf = amount+amount*itf;
+		double amountWithItf = amount+amount*ITF;
 		
 		withdrawalAmount(amountWithItf);
 		destinationAccount.depositTranferAmount(amount);
 
 		Transfer transfer = new Transfer(location, this, destinationAccount,
 				amount);
+		transfer.setAmountItf(amount*ITF);
 		this.transfers.add(transfer);
 		destinationAccount.transfers.add(transfer);
 
 		return transfer;
 	}
 
-	public Withdrawal withdrawal(OperationLocation location, double amount,double itf)
+	public Withdrawal withdrawal(OperationLocation location, double amount)
 			throws BusinessException {
-		double amountWithItf = amount+amount*itf;
+		double amountWithItf = amount+amount*ITF;
 		withdrawalAmount(amountWithItf);
 
 		Withdrawal withdrawal = new Withdrawal(location, this, amount);
 		this.withdrawals.add(withdrawal);
+		withdrawal.setAmountItf(ITF*amount);
 
 		return withdrawal;
 	}

@@ -133,15 +133,15 @@ public class Database {
 				Deposit dp1 = new Deposit(b1, ca1, r.nextInt(10000), r.nextDouble() * 150);
 				insertPendingDeposit(dp1);
 				
-				changeDate(ca1.withdrawal(atm1, r.nextDouble() * 100,0.002), r, cal);
-				changeDate(ca1.transfer(atm2, ca2, r.nextDouble() * 100,0.002), r,
+				changeDate(ca1.withdrawal(atm1, r.nextDouble() * 100), r, cal);
+				changeDate(ca1.transfer(atm2, ca2, r.nextDouble() * 100), r,
 						cal);
 
 				changeDate(
 						ca2.deposit(b2, r.nextInt(10000), r.nextDouble() * 150),
 						r, cal);
-				changeDate(ca2.withdrawal(atm2, r.nextDouble() * 100, 0.002), r, cal);
-				changeDate(ca2.transfer(atm3, ca1, r.nextDouble() * 100, 0.002), r,
+				changeDate(ca2.withdrawal(atm2, r.nextDouble() * 100), r, cal);
+				changeDate(ca2.transfer(atm3, ca1, r.nextDouble() * 100), r,
 						cal);
 
 				cal.add(Calendar.MONTH, -1);
