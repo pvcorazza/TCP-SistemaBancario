@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import bank.business.BusinessException;
 import bank.business.domain.ATM;
 import bank.business.domain.Branch;
@@ -33,7 +30,6 @@ public class Database {
 
 	private final Map<CurrentAccountId, CurrentAccount> currentAccounts;
 	private final Map<String, Employee> employees;
-	private final Log log;
 	private final Map<Long, OperationLocation> operationLocations;
 
 	// save all the pending deposits according
@@ -46,7 +42,6 @@ public class Database {
 	}
 
 	public Database(boolean initData) {
-		this.log = LogFactory.getLog(getClass());
 		this.operationLocations = new HashMap<>();
 		this.employees = new HashMap<>();
 		this.currentAccounts = new HashMap<>();
@@ -141,8 +136,8 @@ public class Database {
 				cal.add(Calendar.MONTH, -1);
 			}
 		} catch (Exception e) {
-			log.error(e);
-			e.printStackTrace();
+//			log.error(e);
+//			e.printStackTrace();
 		}
 	}
 

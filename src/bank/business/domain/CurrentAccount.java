@@ -198,9 +198,9 @@ public class CurrentAccount implements Credentials {
 		this.balance -= amount;
 	}
 	
-	public void confirmDeposit(Deposit deposit){
-		int index = deposits.indexOf(deposit);
-		deposits.get(index).setStatusConfirmed();
-	}
+//	public void confirmDeposit(Deposit deposit){
+//		int index = deposits.indexOf(deposit);
+//		deposits.get(index).setStatusConfirmed();
+//	}
 
 }

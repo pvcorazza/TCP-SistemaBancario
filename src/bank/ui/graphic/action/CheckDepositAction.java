@@ -130,7 +130,6 @@ public class CheckDepositAction extends BankAction {
 				} else {
 					deposit.setStatusConfirmed();
 					lblConfirmation.setText("Depósito confirmado com sucesso!");
-					accountOperationService.confirmDeposit(deposit);
 
 					try {
 						accountOperationService.updateDepositStatus(deposit);

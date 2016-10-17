@@ -57,7 +57,6 @@ public class AccountOperationServiceImpl implements AccountOperationService {
 		CurrentAccount currentAccount = readCurrentAccount(deposit.getAccount().getId().getBranch().getNumber(),
 				deposit.getAccount().getId().getNumber());
 
-		currentAccount.confirmDeposit(deposit);
 		currentAccount.sumAmount(deposit.getAmount());
 
 	}
